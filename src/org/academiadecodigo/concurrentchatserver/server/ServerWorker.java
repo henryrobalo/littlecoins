@@ -16,14 +16,14 @@ public class ServerWorker implements Runnable {
     private Server server;
     private PrintWriter out = null;
     private BufferedReader in = null;
-    private Socket clientSocket = null;
+    private Socket playerSocket = null;
     private boolean closed = true;
     private String name;
 
 
-    public ServerWorker(Socket clientSocket, Server server) {
+    public ServerWorker(Socket playerSocket, Server server) {
 
-        this.clientSocket = clientSocket;
+        this.playerSocket = playerSocket;
         this.server = server;
 
 
@@ -37,9 +37,9 @@ public class ServerWorker implements Runnable {
        /*
        * Create input and output streams for this client.
        */
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
+            out = new PrintWriter(playerSocket.getOutputStream(), true);
 
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(playerSocket.getInputStream()));
 
             while (closed) {
 
@@ -78,7 +78,7 @@ public class ServerWorker implements Runnable {
 
 
             closed = false;
-            clientSocket.close();
+            playerSocket.close();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -87,7 +87,7 @@ public class ServerWorker implements Runnable {
 
     public void send(String msg, String name) {
 
-        out.println("(" + new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()) + ")" + name + "- " + msg);
+        out.println("(" + new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()) + " ) " + name + " bet : " + msg);
 
     }
 

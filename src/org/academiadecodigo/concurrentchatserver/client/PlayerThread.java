@@ -8,11 +8,11 @@ import java.net.Socket;
 public class PlayerThread implements Runnable {
 
 
-    private Socket clientSocket = null;
+    private Socket playerSocket = null;
     private BufferedReader in = null;
 
-    public PlayerThread(Socket clientSocket) throws IOException {
-        this.clientSocket = clientSocket;
+    public PlayerThread(Socket playerSocket) throws IOException {
+        this.playerSocket = playerSocket;
 
     }
 
@@ -21,7 +21,7 @@ public class PlayerThread implements Runnable {
 
         try {
 
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(playerSocket.getInputStream()));
 
             String line;
 
@@ -30,7 +30,7 @@ public class PlayerThread implements Runnable {
             }
 
             in.close();
-            clientSocket.close();
+            playerSocket.close();
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -12,7 +12,7 @@ import java.net.Socket;
  */
 public class Player {
 
-    Socket clientSocket = null;
+    Socket playerSocket = null;
 
     PrintWriter out = null;
     BufferedReader inputLine = null;
@@ -20,38 +20,50 @@ public class Player {
     private String hostName;
     private String bet;
     private int guess;
+    private int value;
 
 
-    public Player(int portNumber, String hostName) throws IOException {
+    public Player(int portNumber, String hostName) {
         this.portNumber = portNumber;
         this.hostName = hostName;
 
     }
 
-    public void startClient() {
+    public void startPlayer() {
 
 
         try {
 
-            clientSocket = new Socket(hostName, portNumber);
+            playerSocket = new Socket(hostName, portNumber);
 
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
+            System.out.println("Hi ... Welcome to little coins Game...");
+            System.out.println("You have 3 Coins , choose how many coins you want to bet..");
+
+            out = new PrintWriter(playerSocket.getOutputStream(), true);
 
             inputLine = new BufferedReader(new InputStreamReader(System.in));
 
 
-            PlayerThread clientThread = new PlayerThread(clientSocket);
+            PlayerThread clientThread = new PlayerThread(playerSocket);
             Thread t = new Thread(clientThread);
             t.start();
 
+            System.out.println("Place your bet , between 0 - 3 : ");
+
             while (true) {
 
-                System.out.println("Place your bet");
-
-
                 bet = inputLine.readLine();
+                value = Integer.parseInt(bet);
 
-                out.println(bet);
+
+                if(value >= 0 && value <= 3){
+                    out.println(bet);
+                } else {
+                    System.out.println("Make sure you bet between 0 or 3 coins!");
+                    System.out.println("Place your bet , between 0 - 3 : ");
+                }
+
+
 
             }
 
@@ -76,7 +88,7 @@ public class Player {
                 }
             }
             try {
-                clientSocket.close();
+                playerSocket.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }

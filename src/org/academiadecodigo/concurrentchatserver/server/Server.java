@@ -1,6 +1,8 @@
 package org.academiadecodigo.concurrentchatserver.server;
 
 
+import com.sun.tools.doclets.formats.html.SourceToHTMLConverter;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -17,16 +19,16 @@ import java.util.concurrent.Executors;
 public class Server {
 
     private int portNumber;
-    private int maxClient;
+    private int maxPlayer;
     private ServerSocket serverSocket = null;
 
 
-    //private List<ServerWorker> threadsList = new ArrayList<>(maxClient);
-    private List<ServerWorker> synThreadlist = Collections.synchronizedList(new ArrayList<>(maxClient));
+    //private List<ServerWorker> threadsList = new ArrayList<>(maxPlayer);
+    private List<ServerWorker> synThreadlist = Collections.synchronizedList(new ArrayList<>(maxPlayer));
 
-    public Server(int portNumber, int maxClient) {
+    public Server(int portNumber, int maxPlayer) {
         this.portNumber = portNumber;
-        this.maxClient = maxClient;
+        this.maxPlayer = maxPlayer;
     }
 
 
@@ -36,9 +38,10 @@ public class Server {
 
 
         try {
-
+            System.out.println("Welcome to littleCoins Server...");
             serverSocket = new ServerSocket(portNumber);
-            System.out.println("waiting for client...");
+            System.out.println("Server Started...");
+            System.out.println("Waiting for Players...");
 
 
      /*
@@ -46,13 +49,14 @@ public class Server {
      * thread.
      */
             int i = 1;
+
             while (true) {
 
-                Socket clientSocket = serverSocket.accept();
+                Socket playerSocket = serverSocket.accept();
 
-                System.out.println("listening...");
+                System.out.println("Connection from : "+playerSocket.getInetAddress());
 
-                ServerWorker sw = new ServerWorker(clientSocket, this);
+                ServerWorker sw = new ServerWorker(playerSocket, this);
 
                 sw.setName("Player " + i);
                 i++;

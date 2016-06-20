@@ -9,14 +9,9 @@ public class MainPlayer {
 
     public static void main(String[] args) {
 
-        Player client = null;
+        Player player = new Player(7000,"localhost");
+        player.startPlayer();
 
-        try {
-            client = new Player(Integer.parseInt(args[0]), args[1]);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        client.startClient();
     }
 }
 
