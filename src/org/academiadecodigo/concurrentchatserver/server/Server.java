@@ -54,7 +54,7 @@ public class Server {
 
                 ServerWorker sw = new ServerWorker(clientSocket, this);
 
-                sw.setName("Client " + i);
+                sw.setName("Player " + i);
                 i++;
 
                 synThreadlist.add(sw);
@@ -64,6 +64,10 @@ public class Server {
                 pool.submit(thread);
 
             }
+
+
+
+
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -10,17 +10,19 @@ import java.net.Socket;
 /**
  * Created by henry on 19/06/2016.
  */
-public class Client {
+public class Player {
 
     Socket clientSocket = null;
-    String message = "";
+
     PrintWriter out = null;
     BufferedReader inputLine = null;
     private int portNumber;
     private String hostName;
+    private String bet;
+    private int guess;
 
 
-    public Client(int portNumber, String hostName) throws IOException {
+    public Player(int portNumber, String hostName) throws IOException {
         this.portNumber = portNumber;
         this.hostName = hostName;
 
@@ -38,27 +40,23 @@ public class Client {
             inputLine = new BufferedReader(new InputStreamReader(System.in));
 
 
-            ClientThread clientThread = new ClientThread(clientSocket);
+            PlayerThread clientThread = new PlayerThread(clientSocket);
             Thread t = new Thread(clientThread);
             t.start();
 
             while (true) {
 
-                message = inputLine.readLine();
+                System.out.println("Place your bet");
 
-                out.println(message);
 
-                if (message.equals("/quit")) {
-                    out.println(message);
-                    clientSocket.close();
-                    break;
-                }
+                bet = inputLine.readLine();
+
+                out.println(bet);
 
             }
 
 
 
-               // t.join();
 
 
 
@@ -76,6 +74,11 @@ public class Client {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
+            try {
+                clientSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
         }

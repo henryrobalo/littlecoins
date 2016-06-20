@@ -5,13 +5,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-public class ClientThread implements Runnable {
+public class PlayerThread implements Runnable {
 
 
     private Socket clientSocket = null;
     private BufferedReader in = null;
 
-    public ClientThread(Socket clientSocket) throws IOException {
+    public PlayerThread(Socket clientSocket) throws IOException {
         this.clientSocket = clientSocket;
 
     }
