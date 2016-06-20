@@ -1,7 +1,5 @@
-package org.academiadecodigo.concurrentchatserver.server;
+package org.academiadecodigo.littlecoins.server;
 
-
-import com.sun.tools.doclets.formats.html.SourceToHTMLConverter;
 
 import java.io.IOException;
 import java.net.ServerSocket;

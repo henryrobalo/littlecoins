@@ -1,6 +1,6 @@
-package org.academiadecodigo.concurrentchatserver;
+package org.academiadecodigo.littlecoins;
 
-import org.academiadecodigo.concurrentchatserver.server.Server;
+import org.academiadecodigo.littlecoins.server.Server;
 
 /**
  * Created by codecadet on 20/06/16.

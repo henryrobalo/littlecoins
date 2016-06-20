@@ -1,4 +1,4 @@
-package org.academiadecodigo.concurrentchatserver.client;
+package org.academiadecodigo.littlecoins.player;
 
 import java.io.BufferedReader;
 import java.io.IOException;

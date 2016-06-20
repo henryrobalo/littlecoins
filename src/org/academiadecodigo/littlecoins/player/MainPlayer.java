@@ -1,6 +1,4 @@
-package org.academiadecodigo.concurrentchatserver.client;
-
-import java.io.IOException;
+package org.academiadecodigo.littlecoins.player;
 
 /**
  * Created by codecadet on 17/06/16.
