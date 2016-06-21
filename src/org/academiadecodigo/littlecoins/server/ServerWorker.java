@@ -17,8 +17,12 @@ public class ServerWorker implements Runnable {
     private PrintWriter out = null;
     private BufferedReader in = null;
     private Socket playerSocket = null;
-    private boolean closed = true;
+    private boolean alreadyWin;
+    private boolean correctName;
     private String name;
+    private String bet;
+    private String guess;
+    private String tName;
 
 
     public ServerWorker(Socket playerSocket, Server server) {
@@ -41,28 +45,94 @@ public class ServerWorker implements Runnable {
 
             in = new BufferedReader(new InputStreamReader(playerSocket.getInputStream()));
 
-            while (closed) {
 
-                String mensagem = in.readLine();
+            out.println("Hi ... Welcome to little coins Game...");
 
 
-                if (mensagem.equals("/quit")) {
+            out.println("Please enter your name.");
+
+
+            while (!correctName) {
+                tName = in.readLine();
+
+                if (server.containsName(tName) || tName.equals("")) {
+
+                    out.println("This name is already in the list. Please change name");
+                    // tName = in.readLine();
+
+
+                } else {
+                    setName(tName);
+                    //out.println("Name changed to " + tName);
+                    correctName = true;
+                    out.println("Your name has changed!");
+                }
+
+
+            }
+
+            out.println("You have 3 Coins , choose how many coins you want to bet..");
+
+
+            while (!alreadyWin) {
+
+                bet = in.readLine();
+
+                System.out.println(bet);
+                int value = Integer.parseInt(bet);
+
+
+                if (value >= 0 && value <= 3) {
+                    out.println(bet);
+                } else {
+                    out.println("Make sure you bet between 0 or 3 coins!");
+                    out.println("Place your bet , between 0 - 3 : ");
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                /*if (bet.equals("/quit")) {
 
                     server.removeFromList(this);
                     server.sendToAll(name + " is out", name);
                     break;
 
-                } else if (mensagem.equals("/list")) {
+                } else if (bet.equals("/list")) {
 
                     out.println(server.listAll());
 
 
-                } else if (mensagem.equals("/rename")) {
+                } else if (bet.equals("/rename")) {
 
                     setName(in.readLine());
 
 
-                } else if (mensagem.equals("/private")) {
+                } else if (bet.equals("/private")) {
 
                     String nome =in.readLine();
                     String text =in.readLine();
@@ -70,15 +140,15 @@ public class ServerWorker implements Runnable {
 
                 } else {
 
-                    server.sendToAll(mensagem, name);
+                    server.sendToAll(bet, name);
                 }
-
+*/
 
             }
 
 
-            closed = false;
-            playerSocket.close();
+            alreadyWin = false;
+            // playerSocket.close();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -98,5 +168,13 @@ public class ServerWorker implements Runnable {
 
     public String getName() {
         return name;
+    }
+
+    public String getBet() {
+        return bet;
+    }
+
+    public String getGuess() {
+        return guess;
     }
 }

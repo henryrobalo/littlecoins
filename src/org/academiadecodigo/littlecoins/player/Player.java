@@ -36,8 +36,8 @@ public class Player {
 
             playerSocket = new Socket(hostName, portNumber);
 
-            System.out.println("Hi ... Welcome to little coins Game...");
-            System.out.println("You have 3 Coins , choose how many coins you want to bet..");
+           // System.out.println("Hi ... Welcome to little coins Game...");
+            //System.out.println("You have 3 Coins , choose how many coins you want to bet..");
 
             out = new PrintWriter(playerSocket.getOutputStream(), true);
 
@@ -48,28 +48,25 @@ public class Player {
             Thread t = new Thread(clientThread);
             t.start();
 
-            System.out.println("Place your bet , between 0 - 3 : ");
+            //System.out.println("Place your bet , between 0 - 3 : ");
 
-            while (true) {
-
-                bet = inputLine.readLine();
-                value = Integer.parseInt(bet);
-
-
-                if(value >= 0 && value <= 3){
-                    out.println(bet);
-                } else {
-                    System.out.println("Make sure you bet between 0 or 3 coins!");
-                    System.out.println("Place your bet , between 0 - 3 : ");
-                }
-
-
-
+            while (!clientThread.hasName()) {
+                String name = inputLine.readLine();
+                out.println(name);
             }
 
 
 
+            while (true) {
 
+                bet = inputLine.readLine();
+
+
+
+
+
+
+            }
 
 
         } catch (IOException e) {

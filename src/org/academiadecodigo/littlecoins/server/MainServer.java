@@ -1,5 +1,7 @@
 package org.academiadecodigo.littlecoins.server;
 
+import org.academiadecodigo.littlecoins.Game;
+
 /**
  * Created by codecadet on 17/06/16.
  */

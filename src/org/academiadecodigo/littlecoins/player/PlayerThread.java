@@ -8,8 +8,9 @@ import java.net.Socket;
 public class PlayerThread implements Runnable {
 
 
-    private Socket playerSocket = null;
-    private BufferedReader in = null;
+    private Socket playerSocket;
+    private BufferedReader in;
+    private boolean hasName;
 
     public PlayerThread(Socket playerSocket) throws IOException {
         this.playerSocket = playerSocket;
@@ -26,6 +27,9 @@ public class PlayerThread implements Runnable {
             String line;
 
             while ((line = in.readLine()) != null) {
+                if(line.equals("Your name has changed!")){
+                    hasName = !hasName;
+                }
                 System.out.println(line);
             }
 
@@ -35,5 +39,9 @@ public class PlayerThread implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean hasName() {
+        return hasName;
     }
 }
