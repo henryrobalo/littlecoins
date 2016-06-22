@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Calendar;
 
 
 /**
@@ -22,7 +21,7 @@ public class ServerWorker implements Runnable {
     private boolean correctBet;
     private boolean correctGuess;
     private String name;
-    private int bet;
+    private int hand;
     private int guess;
 
 
@@ -30,9 +29,9 @@ public class ServerWorker implements Runnable {
 
         this.playerSocket = playerSocket;
         this.server = server;
-
-
     }
+
+
 
     @Override
     public void run() {
@@ -52,10 +51,31 @@ public class ServerWorker implements Runnable {
 
             out.println("Please enter your name.");
 
-            acceptName();
+            acceptName(); //fixe
+
+            while (in.readLine() != "TOKEN"){
+                wait();
+            }
 
 
-            out.println("You have 3 Coins , choose how many coins you want to bet..");
+                out.println("You have 3 Coins , choose how many coins you want to hand..");
+
+
+
+            if(in.readLine().contains("Guess")){
+                server.sendToAll(name, Integer.toString(guess));
+            } else {
+
+            }
+            //while (in.readLine()) //blokear a ler a espera de aposta.             {
+         //metodos do servidor que sejam relevantes
+            //if line.contains("GUESS"){server.guess(NOME, GUESS)}
+            //else{ server.bet(nome,APOSTA);}
+           // servidor.jodata("NOMEDO GAJO",APOSTA);
+        //}
+
+
+
 
 
             while (!alreadyWin) {
@@ -74,26 +94,16 @@ public class ServerWorker implements Runnable {
 
                 while (true) {
                     String line = in.readLine();
-
                 }
-
-
             }
-
-
-
-
-
-
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
+    /**
+     * Fetches name, and check availability in the server.
+     */
     private synchronized void acceptName(){
 
         while (!correctName) {
@@ -114,8 +124,6 @@ public class ServerWorker implements Runnable {
                 correctName = true;
                 out.println("Your name was accepted!");
             }
-
-
         }
 
     }
@@ -135,21 +143,20 @@ public class ServerWorker implements Runnable {
 
 
             if (value >= 0 && value <= 3) {
-                bet = value;
-                out.println(bet);
+                hand = value;
+                out.println(hand);
                 out.println("Bet accept!");//nao alterar este print é a condiçao de saida do while na playerThread
-                System.out.println("Player " + name + " bet is: " + value);
+                System.out.println("Player " + name + " hand is: " + value);
                 correctBet = true;
 
             } else {
-                out.println("Make sure you bet between 0 or 3 coins!");
-                out.println("Place your bet , between 0 - 3 : ");
+                out.println("Make sure you hand between 0 or 3 coins!");
+                out.println("Place your hand , between 0 - 3 : ");
             }
 
         }
 
     }
-
 
     private synchronized void acceptGuess(){
 
@@ -168,7 +175,7 @@ public class ServerWorker implements Runnable {
             if (server.containsGuess(value)) {
                 out.println("The guess " + value + " is already on the list");
             } else if (value > (server.getCounterPlayers() * 3)) {
-                out.println("Make sure you bet between 0 and " + (server.getCounterPlayers() * 3) + " coins");
+                out.println("Make sure you hand between 0 and " + (server.getCounterPlayers() * 3) + " coins");
 
             } else {
                 guess = value;
@@ -176,6 +183,9 @@ public class ServerWorker implements Runnable {
                 out.println("Guess accept!");//nao alterar este print é a condiçao de saida do while na playerThread
                 System.out.println("Player " + name + " guess is: " + value);
                 correctGuess = true;
+
+
+                server.sendToAll(Integer.toString(guess),name);
 
             }
 
@@ -185,9 +195,9 @@ public class ServerWorker implements Runnable {
     }
 
 
-    public void send(String msg, String name) {
+    public void send(String msg) {
 
-        out.println("(" + new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()) + " ) " + name + " bet : " + msg);
+        out.println(msg);
 
     }
 
@@ -200,8 +210,8 @@ public class ServerWorker implements Runnable {
         return name;
     }
 
-    public int getBet() {
-        return bet;
+    public int getHand() {
+        return hand;
     }
 
     public int getGuess() {

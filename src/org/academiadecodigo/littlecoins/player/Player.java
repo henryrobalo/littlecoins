@@ -18,9 +18,8 @@ public class Player {
     BufferedReader inputLine = null;
     private int portNumber;
     private String hostName;
-    private String bet;
-    private int guess;
-    private int value;
+
+
 
 
     public Player(int portNumber, String hostName) {
@@ -48,23 +47,38 @@ public class Player {
             Thread t = new Thread(clientThread);
             t.start();
 
-            //System.out.println("Place your bet , between 0 - 3 : ");
-
+            //
+            // in.readline();
+            //
+            //while(true){
+            //while(afaf)
+                //wait;
+                //in.readline();
+            //
+            //}
             while (!clientThread.hasName()) {
                 String name = inputLine.readLine();
                 out.println(name);
             }
 
-
-
-            while (true) {
-
-                bet = inputLine.readLine();
-
-
-
-
+            while (!clientThread.hasBet()) {
+                String bet = inputLine.readLine();
+                out.println(bet);
             }
+
+            while (!clientThread.hasGuess()) {
+                String guess = inputLine.readLine();
+                out.println(guess);
+            }
+
+
+
+
+
+
+
+
+
 
 
 
