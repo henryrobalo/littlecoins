@@ -19,9 +19,11 @@ public class ServerWorker implements Runnable {
     private Socket playerSocket = null;
     private boolean alreadyWin;
     private boolean correctName;
+    private boolean correctBet;
+    private boolean correctGuess;
     private String name;
-    private String bet;
-    private String guess;
+    private int bet;
+    private int guess;
     private String tName;
 
 
@@ -76,19 +78,26 @@ public class ServerWorker implements Runnable {
 
             while (!alreadyWin) {
 
-                bet = in.readLine();
+                while (!correctBet) {
 
-                System.out.println(bet);
-                int value = Integer.parseInt(bet);
+                    String tempBet = in.readLine();
+
+                    System.out.println(bet);
+                    int value = Integer.parseInt(tempBet);
 
 
-                if (value >= 0 && value <= 3) {
-                    out.println(bet);
-                } else {
-                    out.println("Make sure you bet between 0 or 3 coins!");
-                    out.println("Place your bet , between 0 - 3 : ");
+                    if (value >= 0 && value <= 3) {
+                        bet = value;
+                        out.println(bet);
+                    } else {
+                        out.println("Make sure you bet between 0 or 3 coins!");
+                        out.println("Place your bet , between 0 - 3 : ");
+                    }
+
+
                 }
 
+                while (!correctGuess) {
 
 
 
@@ -96,64 +105,23 @@ public class ServerWorker implements Runnable {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                /*if (bet.equals("/quit")) {
-
-                    server.removeFromList(this);
-                    server.sendToAll(name + " is out", name);
-                    break;
-
-                } else if (bet.equals("/list")) {
-
-                    out.println(server.listAll());
-
-
-                } else if (bet.equals("/rename")) {
-
-                    setName(in.readLine());
-
-
-                } else if (bet.equals("/private")) {
-
-                    String nome =in.readLine();
-                    String text =in.readLine();
-                    server.sendPrivateMessage(text,nome,name);
-
-                } else {
-
-                    server.sendToAll(bet, name);
                 }
-*/
+
 
             }
 
 
             alreadyWin = false;
-            // playerSocket.close();
+            // playerSocket.close()
+
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
     }
+
 
     public void send(String msg, String name) {
 
@@ -170,11 +138,15 @@ public class ServerWorker implements Runnable {
         return name;
     }
 
-    public String getBet() {
+    public int getBet() {
         return bet;
     }
 
-    public String getGuess() {
+    public int getGuess() {
         return guess;
+    }
+
+    public boolean isAlreadyWin() {
+        return alreadyWin;
     }
 }

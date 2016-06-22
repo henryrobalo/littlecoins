@@ -22,11 +22,9 @@ public class Server {
     private int portNumber;
     private int maxPlayer;
     private ServerSocket serverSocket = null;
-    private int counterPlayers=3;
+    private int counterPlayers = 3;
 
     private Game game;
-
-
 
 
     //private List<ServerWorker> threadsList = new ArrayList<>(maxPlayer);
@@ -75,7 +73,7 @@ public class Server {
 
                 pool.submit(thread);
 
-                if(i == 2){
+                if (i == 2) {
                     game.start();
                 }
 
@@ -98,6 +96,24 @@ public class Server {
             }
         }
 
+    }
+
+
+    public int countPlayers() {
+
+        int count=0;
+
+        synchronized (synThreadlist) {
+
+            for (ServerWorker c : synThreadlist) {
+
+                if (!c.isAlreadyWin()) {
+                    count++;
+                }
+            }
+        }
+
+        return count;
     }
 
 
@@ -146,7 +162,7 @@ public class Server {
     }
 
 
-    public boolean containsName(String name){
+    public boolean containsName(String name) {
 
         for (ServerWorker c : synThreadlist) {
 
@@ -159,6 +175,21 @@ public class Server {
         }
         return false;
     }
+
+
+    public boolean containsGuess(int guess){
+
+        for (ServerWorker c : synThreadlist) {
+
+            if (c.getGuess() == guess) {
+
+                return true;
+
+            }
+        }
+        return false;
+    }
+
 
 
     public List<ServerWorker> getSynThreadlist() {
