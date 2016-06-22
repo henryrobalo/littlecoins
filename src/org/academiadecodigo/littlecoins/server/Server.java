@@ -67,13 +67,13 @@ public class Server {
                 i++;
 
                 synThreadlist.add(sw);
-                System.out.println(synThreadlist.size());
+                System.out.println("created players: " + synThreadlist.size());
 
                 Thread thread = new Thread(sw);
 
                 pool.submit(thread);
 
-                if (i == 2) {
+                if (i >= 2) {
                     game.start();
                 }
 
@@ -197,7 +197,6 @@ public class Server {
     }
 
     public int getCounterPlayers() {
-        System.out.println();
         return synThreadlist.size();
     }
 }

@@ -28,16 +28,12 @@ public class Game {
 
     public void start() {
 
-
-        //totalPlayers = server.getCounterPlayers();
-
-
         totalPlayers = server.getCounterPlayers();
 
         totalCoins = totalPlayers * COINS;
 
-        System.out.println("Im the game"+totalPlayers);
-        System.out.println("Im the game"+totalCoins);
+        System.out.println("Total players: "+totalPlayers);
+        System.out.println("Total coins: "+totalCoins);
 
 
 

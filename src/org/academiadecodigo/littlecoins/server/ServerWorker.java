@@ -82,13 +82,14 @@ public class ServerWorker implements Runnable {
 
                     String tempBet = in.readLine();
 
-                    System.out.println(bet);
                     int value = Integer.parseInt(tempBet);
 
 
                     if (value >= 0 && value <= 3) {
                         bet = value;
                         out.println(bet);
+                        System.out.println("Player " + name + " bet is: " + value);
+
                     } else {
                         out.println("Make sure you bet between 0 or 3 coins!");
                         out.println("Place your bet , between 0 - 3 : ");
