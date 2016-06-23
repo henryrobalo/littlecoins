@@ -42,7 +42,7 @@ public class Game {
     }
 
 
-    public synchronized boolean acceptHand(String hand) {
+    public synchronized boolean correctHand(String hand) {
 
 
         int value = Integer.parseInt(hand);
@@ -57,7 +57,7 @@ public class Game {
     }
 
 
-    public synchronized boolean acceptGuess(String guess) {
+    public synchronized boolean correctGuess(String guess) {
 
         int value = Integer.parseInt(guess);
 
@@ -103,7 +103,7 @@ public class Game {
     public int totalCoinsOnHand(int hands){
 
 
-        totalHands =totalHands+hands;
+        totalHands = totalHands+hands;
 
         return totalHands;
 
