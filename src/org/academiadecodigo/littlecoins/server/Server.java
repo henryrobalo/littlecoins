@@ -23,7 +23,9 @@ public class Server {
     private ServerSocket serverSocket = null;
     private int counterPlayers = 3;
 
-    private  boolean gameEnds;
+    private boolean gameEnds;
+    public boolean gameStarts;
+
     private Game game;
 
 
@@ -57,7 +59,7 @@ public class Server {
             int i = 0;
             game = new Game();
 
-            while (i >= 2) {
+            while (i < 2) {
 
                 Socket playerSocket = serverSocket.accept();
 
@@ -68,7 +70,6 @@ public class Server {
 
                 ServerWorker sw = new ServerWorker(playerSocket, this);
 
-                sw.setName("Player " + i);
                 i++;
 
                 serverWorkerList.add(sw);
@@ -78,22 +79,53 @@ public class Server {
                 //if number of players ? repeat, not stop on server accept
                 //fecha o while aqui
             }
+            System.out.println("game staring");
 
-                game.start();
-
-            while (!gameEnds){
-
-                for (ServerWorker sw: serverWorkerList) {
-                    sendPrivateMessage("TOKEN", sw);
-
-
+            synchronized (this) {
+                while (!this.checkNames()) {
+                    System.out.println("server: Waiting for players");
+                    try {
+                        this.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
+                System.out.println("setting game start = true");
+                this.gameStarts = true;
+                this.notifyAll();
+            }
 
+            game.start();
+
+            while (!gameEnds) {
+
+                //bet :
+
+                for (ServerWorker sw : serverWorkerList) {
+                    sw.send("Qual é a bet?");
+                    sw.send("TOKEN");
+                    //sendPrivateMessage("TOKEN", sw);
+                }
+                synchronized (this) {
+                    try {
+                        System.out.println("waiting");
+                        while (!game.hasBet()) {
+                            //while (!this.hasBet()) {
+                            this.wait();
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                System.out.println("START GUESSING");
+
+                //guess:
 
                 //while(!game.ends)
                 //  for each in array:
                 //      send: "qual é a tua bet?"
                 //      send: "TOKEN"
+
                 // wait // notifica no metodo bet
                 //what is the guess
                 //  for each in array:
@@ -106,12 +138,11 @@ public class Server {
 
                 //send all last player was tal. he pays the beer.
 
-            } catch (IOException e1) {
-            e1.printStackTrace();
-        }
+
+            }
 
 
-    } catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         } finally {
 
@@ -130,38 +161,45 @@ public class Server {
     }
 
 
-    public boolean containsName(String name) {
-
-        for (ServerWorker c : serverWorkerList) {
-
-            if (c.getName().equals(name)) {
-
-                return true;
-
-            }
-
+    /*public synchronized boolean hasBet(){
+        for(ServerWorker c : serverWorkerList){
+            if(c.bet==-1)return false;
         }
-        return false;
+        return true;
+    }*/
+    public synchronized boolean setName(ServerWorker thread, String name) {
+        System.out.println("Setting name " + name);
+        //game.add(name,null);
+        thread.setName(name);
+        System.out.println("notify");
+        this.notifyAll();
+        return true;
+    }
+
+    public synchronized boolean checkNames() {
+        for (ServerWorker c : serverWorkerList) {
+            System.out.println("Checking names " + c.getName());
+            if (c.getName() == null) return false;
+        }
+        return true;
     }
 
 
-    public boolean containsGuess(int guess){
-
+    public boolean containsName(String name) {
         for (ServerWorker c : serverWorkerList) {
 
-            if (c.getGuess() == guess) {
-
+            if (c.getName() != null && c.getName().equals(name)) {
                 return true;
-
             }
         }
+
         return false;
     }
 
 
     public int countPlayers() {
 
-        int count=0;
+        int count = 0;
 
         synchronized (serverWorkerList) {
 
@@ -204,24 +242,6 @@ public class Server {
             }
         }
     }
-
-
-    public void removeFromList(ServerWorker sw) {
-
-        serverWorkerList.remove(sw);
-    }
-
-    public String listAll() {
-
-        String list = "";
-
-        for (ServerWorker c : serverWorkerList) {
-            list = list + c.getName() + "\n";
-        }
-        return list;
-    }
-
-
 
 
     public List<ServerWorker> getServerWorkerList() {

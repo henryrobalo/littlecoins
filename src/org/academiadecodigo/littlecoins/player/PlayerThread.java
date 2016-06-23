@@ -13,9 +13,11 @@ public class PlayerThread implements Runnable {
     private boolean hasName;
     private boolean hasBet;
     private boolean hasGuess;
+    private Player parent;
 
-    public PlayerThread(Socket playerSocket) throws IOException {
+    public PlayerThread(Socket playerSocket,Player parent) throws IOException {
         this.playerSocket = playerSocket;
+        this.parent=parent;
 
     }
 
@@ -23,18 +25,30 @@ public class PlayerThread implements Runnable {
     public void run() {
 
         try {
-
+            System.out.println("running");
             in = new BufferedReader(new InputStreamReader(playerSocket.getInputStream()));
 
             String line;
 
             while ((line = in.readLine()) != null) {
-                if(line.equals("Your name was accepted!")){
+                System.out.println("here "+line);
+                if(line.contains("TOKEN")){
+                    synchronized (parent){
+                        parent.notifyAll();
+                    }
+                }else{
+                    System.out.println(line);
+                }  ;
+
+                /*if(line.equals("Your name was accepted!")){
                     hasName = !hasName;
                 }
                 System.out.println(line);
+            */
             }
+            System.out.println("exited");
 
+            /*
             //Quando ler "TOKEN" chama metodo de PLAYER.notify);
             while ((line = in.readLine()) != null) {
                 if(line.equals("Bet accept!")){
@@ -48,7 +62,7 @@ public class PlayerThread implements Runnable {
                     hasGuess = !hasGuess;
                 }
                 System.out.println(line);
-            }
+            }*/
 
 
 

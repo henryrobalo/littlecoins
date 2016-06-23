@@ -3,7 +3,9 @@ package org.academiadecodigo.littlecoins;
 import org.academiadecodigo.littlecoins.player.Player;
 import org.academiadecodigo.littlecoins.server.Server;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,11 +15,13 @@ public class Game {
 
     private static final int COINS = 3;
     private int totalCoins;
-    private int totalPlayers;
+    private int totalPlayers=2;
     private Map<String, Integer> guessMap;
-
+    //private String[] bet = new String[totalPlayers];
+    private List bet = new ArrayList<>();
     private int guess;
     private int totalHands;
+
 
 
 
@@ -39,6 +43,14 @@ public class Game {
         totalCoins = COINS * totalPlayers;
 
 
+    }
+
+
+    public  boolean hasBet(){
+        if(bet.size()<totalPlayers) {
+            return false;
+        }
+        return true;
     }
 
 
@@ -118,6 +130,12 @@ public class Game {
         guessMap.put(name, value);
 
     }
+
+    /*public void addBet(String bets){
+        for (String s: bet) {
+            s = bets;
+        }
+    }*/
 
 }
 

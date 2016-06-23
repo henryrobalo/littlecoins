@@ -43,7 +43,7 @@ public class Player {
             inputLine = new BufferedReader(new InputStreamReader(System.in));
 
 
-            PlayerThread clientThread = new PlayerThread(playerSocket);
+            PlayerThread clientThread = new PlayerThread(playerSocket,this);
             Thread t = new Thread(clientThread);
             t.start();
 
@@ -56,20 +56,23 @@ public class Player {
                 //in.readline();
             //
             //}
-            while (!clientThread.hasName()) {
+            //while (!clientThread.hasName()) {
                 String name = inputLine.readLine();
                 out.println(name);
+            //}
+            synchronized (this){
+                try {
+                    this.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
+            System.out.println("TECLADO DESBLOKEOU");
+            String bet = "BET ";
+            bet += inputLine.readLine();
+            System.out.println("A minha bet é: "+bet);
 
-            while (!clientThread.hasBet()) {
-                String bet = inputLine.readLine();
-                out.println(bet);
-            }
 
-            while (!clientThread.hasGuess()) {
-                String guess = inputLine.readLine();
-                out.println(guess);
-            }
 
 
 
