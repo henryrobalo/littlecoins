@@ -18,9 +18,10 @@ public class Game {
     private int totalPlayers=2;
     private Map<String, Integer> guessMap;
     //private String[] bet = new String[totalPlayers];
-    private List bet = new ArrayList<>();
+    private List betArray = new ArrayList<>();
     private int guess;
     private int totalHands;
+
 
 
 
@@ -47,17 +48,16 @@ public class Game {
 
 
     public  boolean hasBet(){
-        if(bet.size()<totalPlayers) {
+        if(betArray.size()<totalPlayers) {
             return false;
         }
         return true;
     }
 
 
-    public synchronized boolean correctHand(String hand) {
+    public synchronized boolean correctBet(String bet) {
 
-
-        int value = Integer.parseInt(hand);
+        int value = Integer.parseInt(bet);
 
         if (value >= 0 && value <= 3) {
 
@@ -128,6 +128,12 @@ public class Game {
         int value = Integer.parseInt(guess);
 
         guessMap.put(name, value);
+
+    }
+
+    public void setBet(String playerBet) {
+
+       betArray.add(playerBet);
 
     }
 

@@ -56,10 +56,11 @@ public class Player {
                 //in.readline();
             //
             //}
-            //while (!clientThread.hasName()) {
+            while (!clientThread.hasName()) {
+            System.out.println();
                 String name = inputLine.readLine();
                 out.println(name);
-            //}
+            }
             synchronized (this){
                 try {
                     this.wait();

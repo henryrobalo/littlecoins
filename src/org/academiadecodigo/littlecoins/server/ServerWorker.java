@@ -54,6 +54,7 @@ public class ServerWorker implements Runnable {
             acceptName();
 
 
+
             send("Waiting for other users");
             synchronized (server) {
                 System.out.println("Notify server");
@@ -78,8 +79,23 @@ public class ServerWorker implements Runnable {
                     System.out.println("GUESS");
                     //server.guess
                 } else {
+
+
                     System.out.println("BETING");
-                    //server bet
+
+                    while (!correctBet) {
+                        System.out.println("sssdf");
+
+                        try {
+                            in.readLine();
+                            System.out.println("incorrect bet");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    server.bet(line);
+
                 }
             }
 
@@ -162,19 +178,12 @@ public class ServerWorker implements Runnable {
     }
 
 
-    /*
-private  synchronized void acceptBet(){
+    private  synchronized void acceptBet() {
 
-while (!correctBet) {
 
- String tempBet = null;
- try {
-     tempBet = in.readLine();
- } catch (IOException e) {
-     e.printStackTrace();
- }
+}
 
- int value = Integer.parseInt(tempBet);
+ /*int value = Integer.parseInt(tempBet);
 
 
  if (value >= 0 && value <= 3) {

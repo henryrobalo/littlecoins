@@ -31,7 +31,7 @@ public class PlayerThread implements Runnable {
             String line;
 
             while ((line = in.readLine()) != null) {
-                System.out.println("here "+line);
+
                 if(line.contains("TOKEN")){
                     synchronized (parent){
                         parent.notifyAll();

@@ -167,6 +167,8 @@ public class Server {
         }
         return true;
     }*/
+
+
     public synchronized boolean setName(ServerWorker thread, String name) {
         System.out.println("Setting name " + name);
         //game.add(name,null);
@@ -251,4 +253,27 @@ public class Server {
     public int getCounterPlayers() {
         return serverWorkerList.size();
     }
+
+    public void bet(String playerBet) {
+
+
+
+        if(game.correctBet(playerBet)){
+
+            game.setBet(playerBet);
+            System.out.println("bet accepted");
+        }else{
+
+            System.out.println("quase que so faxzeis merdd");
+
+        }
+
+
+
+    }
+
+
+
+
+
 }
