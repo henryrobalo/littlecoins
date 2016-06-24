@@ -28,36 +28,26 @@ public class Player {
 
     }
 
+    /**
+     * Creates a new socket, the output and keyboard input streams and the player threads
+     */
     public void startPlayer() {
-
 
         try {
 
             playerSocket = new Socket(hostName, portNumber);
 
-           // System.out.println("Hi ... Welcome to little coins Game...");
-            //System.out.println("You have 3 Coins , choose how many coins you want to bet..");
-
             out = new PrintWriter(playerSocket.getOutputStream(), true);
 
             inputLine = new BufferedReader(new InputStreamReader(System.in));
 
-
-            PlayerThread clientThread = new PlayerThread(playerSocket,this);
-            Thread t = new Thread(clientThread);
+            PlayerThread playerThread = new PlayerThread(playerSocket,this);
+            Thread t = new Thread(playerThread);
             t.start();
 
-            //
-            // in.readline();
-            //
-            //while(true){
-            //while(afaf)
-                //wait;
-                //in.readline();
-            //
-            //}
-            while (!clientThread.hasName()) {
-            System.out.println();
+
+            while (!playerThread.hasName()) {
+
                 String name = inputLine.readLine();
                 out.println(name);
             }
@@ -68,22 +58,23 @@ public class Player {
                     e.printStackTrace();
                 }
             }
-            System.out.println("TECLADO DESBLOKEOU");
+
+            while (!playerThread.hasBet()){
+                String bet = inputLine.readLine();
+                out.println(bet);
+            }
+            synchronized (this){
+                try {
+                    this.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
             String bet = "BET ";
             bet += inputLine.readLine();
+            out.println(bet);
             System.out.println("A minha bet é: "+bet);
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

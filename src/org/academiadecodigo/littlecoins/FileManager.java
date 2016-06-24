@@ -7,7 +7,7 @@ import java.io.*;
  */
 public class FileManager {
 
-    public static final String filePath = "resources/myfile.txt";
+    public static final String filePath = "resources/myFile.txt";
 
     /**
      * this method read file from resources.

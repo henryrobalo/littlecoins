@@ -18,13 +18,12 @@ public class ServerWorker implements Runnable {
     private PrintWriter out = null;
     private BufferedReader in = null;
     private Socket playerSocket = null;
-    public int bet = -1;    //TODO MUDAR ISTO PK ISTO ESTA MAL
     private boolean alreadyWin;
     private boolean correctName;
     private boolean correctBet;
     private boolean correctGuess;
     private volatile String name;
-    private int hand;
+    private String hand;
     private int guess;
 
 
@@ -35,34 +34,34 @@ public class ServerWorker implements Runnable {
     }
 
 
+    /**
+     * Creates streams output & input
+     */
     @Override
     public void run() {
 
         try {
 
-       /*
-       * Create input and output streams for this client.
-       */
+            //Create streams and accept connections
+
             out = new PrintWriter(playerSocket.getOutputStream(), true);
 
             in = new BufferedReader(new InputStreamReader(playerSocket.getInputStream()));
 
-
-            String read = FileManager.readFile();
-
-            out.println(read);
-
+            out.println(FileManager.readFile());
 
             out.println("Please enter your name.");
 
             acceptName();
 
-
-
             send("Waiting for other users");
+
             synchronized (server) {
+
                 System.out.println("Notify server");
                 server.notifyAll();
+
+                //Wait for all the players write the name
 
                 while (!server.gameStarts) {
                     try {
@@ -74,21 +73,39 @@ public class ServerWorker implements Runnable {
                 }
             }
 
+            //Receive the bet from the players TODO
 
-            out.println("You have 3 Coins , choose how many coins you want to hand..");
+            out.println("You have 3 Coins , choose how many coins you want to hand..(0-3)");
 
             String line = "";
+
+            //Receives and verifies
+
             while ((line = in.readLine()) != null) {
+
                 if (line.contains("GUESS")) {
                     System.out.println("GUESS");
-                    //server.guess
-                } else {
+                    while (!server.isCorrectGuess(line)) {
 
+                        System.out.println("im guessing");
+
+                        try {
+                            in.readLine();
+                            System.out.println("incorrect guess");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    server.guess(name, line);
+
+                } else {
 
                     System.out.println("BETING");
 
-                    while (!correctBet) {
-                        System.out.println("sssdf");
+                    while (!server.isCorrectBet(line)) {
+
+                        System.out.println("im beting");
 
                         try {
                             in.readLine();
@@ -101,16 +118,17 @@ public class ServerWorker implements Runnable {
                     server.bet(line);
 
                 }
+
             }
 
             System.out.println("ENDED");
 
 
-            if (in.readLine().contains("Guess")) {
+         /*   if (in.readLine().contains("Guess")) {
                 server.sendToAll(name, Integer.toString(guess));
             } else {
 
-            }
+            }*/
             //while (in.readLine()) //blokear a ler a espera de aposta.             {
             //metodos do servidor que sejam relevantes
             //if line.contains("GUESS"){server.guess(NOME, GUESS)}
@@ -161,8 +179,6 @@ public class ServerWorker implements Runnable {
                         out.println("This name is already in the list. Please change name");
 
 
-
-
                     } else {
                         System.out.println("entra aqui");
                         server.setName(this, tName);
@@ -181,11 +197,98 @@ public class ServerWorker implements Runnable {
         }
     }
 
+    private void acceptBet() {
 
-    private  synchronized void acceptBet() {
+        synchronized (server) {
+
+            while (!correctBet) {
+
+                String tempBet = null;
+                try {
+                    tempBet = in.readLine();
 
 
-}
+                if (server.getGame().correctBet(tempBet)) {
+                    hand = tempBet;
+                    out.println(hand);
+                    out.println("Bet accept!");//nao alterar este print é a condiçao de saida do while na playerThread
+                    System.out.println("Player " + name + " hand is: " + hand);
+                    correctBet = true;
+
+                } else {
+                    out.println("Make sure you hand between 0 or 3 coins!");
+                    out.println("Place your hand , between 0 - 3 : ");
+                }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void acceptGuess() {
+
+        synchronized (server) {
+
+            while (!correctGuess) {
+
+                String tempGuess = null;
+                try {
+                    tempGuess = in.readLine();
+
+
+                int value = Integer.parseInt(tempGuess);
+
+                if (server.containsGuess(value)) {
+                    out.println("The guess " + value + " is already on the list");
+                } else if (value > (server.getCounterPlayers() * 3)) {
+                    out.println("Make sure you hand between 0 and " + (server.getCounterPlayers() * 3) + " coins");
+
+                } else {
+                    guess = value;
+                    out.println(guess);
+                    out.println("Guess accept!");//nao alterar este print é a condiçao de saida do while na playerThread
+                    System.out.println("Player " + name + " guess is: " + value);
+                    correctGuess = true;
+
+
+                    server.sendToAll(Integer.toString(guess), name);
+
+                }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void send(String msg) {
+
+        out.println(msg);
+
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getHand() {
+        return hand;
+    }
+
+    public int getGuess() {
+        return guess;
+    }
+
+    public boolean isAlreadyWin() {
+        return alreadyWin;
+    }
 
  /*int value = Integer.parseInt(tempBet);
 
@@ -200,73 +303,7 @@ public class ServerWorker implements Runnable {
  } else {
      out.println("Make sure you hand between 0 or 3 coins!");
      out.println("Place your hand , between 0 - 3 : ");
- }
+ }*/
 
 }
 
-}
-
-private synchronized void acceptGuess(){
-
-while (!correctGuess) {
-
- String temGuess = null;
- try {
-     temGuess = in.readLine();
- } catch (IOException e) {
-     e.printStackTrace();
- }
-
- int value = Integer.parseInt(temGuess);
-
-
- if (server.containsGuess(value)) {
-     out.println("The guess " + value + " is already on the list");
- } else if (value > (server.getCounterPlayers() * 3)) {
-     out.println("Make sure you hand between 0 and " + (server.getCounterPlayers() * 3) + " coins");
-
- } else {
-     guess = value;
-     out.println(guess);
-     out.println("Guess accept!");//nao alterar este print é a condiçao de saida do while na playerThread
-     System.out.println("Player " + name + " guess is: " + value);
-     correctGuess = true;
-
-
-     server.sendToAll(Integer.toString(guess),name);
-
- }
-
-
-}
-
-}
-
-*/
-    public void send(String msg) {
-
-        out.println(msg);
-
-    }
-
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getHand() {
-        return hand;
-    }
-
-    public int getGuess() {
-        return guess;
-    }
-
-    public boolean isAlreadyWin() {
-        return alreadyWin;
-    }
-}

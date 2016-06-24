@@ -9,7 +9,7 @@ public class MainServer {
 
     public static void main(String[] args) {
 
-        Server server = new Server(7000,5);
+        Server server = new Server(7000,2);
 
         server.startServer();
     }

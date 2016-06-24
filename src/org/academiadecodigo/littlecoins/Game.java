@@ -1,8 +1,5 @@
 package org.academiadecodigo.littlecoins;
 
-import org.academiadecodigo.littlecoins.player.Player;
-import org.academiadecodigo.littlecoins.server.Server;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,15 +12,11 @@ public class Game {
 
     private static final int COINS = 3;
     private int totalCoins;
-    private int totalPlayers=2;
+    private int totalPlayers = 2;
     private Map<String, Integer> guessMap;
-    //private String[] bet = new String[totalPlayers];
     private List betArray = new ArrayList<>();
     private int guess;
-    private int totalHands;
-
-
-
+    private int totalBetCoins;
 
 
     public Game() {
@@ -31,44 +24,47 @@ public class Game {
 
     }
 
-    public int getTotalPlayers() {
-        return totalPlayers;
-    }
-
-    public int getTotalCoins() {
-        return totalCoins;
-    }
 
     public void start() {
 
+        //set the total coins depending on total players
         totalCoins = COINS * totalPlayers;
 
 
     }
 
-
-    public  boolean hasBet(){
-        if(betArray.size()<totalPlayers) {
-            return false;
-        }
-        return true;
+    /**
+     * Verify if the all the players have bet
+     *
+     * @return
+     */
+    public boolean hasBet() {
+        return betArray.size() < totalPlayers;
     }
 
-
-    public synchronized boolean correctBet(String bet) {
+    /**
+     * Verify if the bet is a integer between 0 - 3
+     *
+     * @param bet
+     * @return
+     */
+    public boolean correctBet(String bet) {
 
         int value = Integer.parseInt(bet);
 
-        if (value >= 0 && value <= 3) {
-
-            return true;
-
-        }
-
-        return false;
+        return (value >= 0 && value <= 3);
     }
 
+    public boolean hasGuess() {
+        return guessMap.size() < totalPlayers;
+    }
 
+    /**
+     * Verify the guess
+     *
+     * @param guess
+     * @return
+     */
     public synchronized boolean correctGuess(String guess) {
 
         int value = Integer.parseInt(guess);
@@ -89,59 +85,80 @@ public class Game {
 
     }
 
-
+    /**
+     * Ends the game if total players reach 1
+     *
+     * @return
+     */
     public boolean ends() {
 
-        if(totalPlayers==1){
-            return true;
-        }
-
-        return false;
-
+        return totalPlayers == 1;
     }
 
-
-    public boolean hasWin(String guess){
+    /**
+     * Verify in one round if any player win
+     *
+     * @param guess
+     * @return
+     */
+    public boolean hasWin(String guess) {
 
         int value = Integer.parseInt(guess);
 
-        if(value==totalHands){
+        if (value == totalBetCoins) {
             return true;
         }
         return false;
 
     }
 
-    public int totalCoinsOnHand(int hands){
+    /**
+     * Calculate all coins are in game
+     *
+     * @param bet
+     * @return
+     */
+    public int totalBetCoins(int bet) {
 
+        totalBetCoins = totalBetCoins + bet;
 
-        totalHands = totalHands+hands;
-
-        return totalHands;
-
+        return totalBetCoins;
 
     }
 
-
+    /**
+     * Add guesses to the HashMap
+     *
+     * @param name
+     * @param guess
+     */
     public void add(String name, String guess) {
 
         int value = Integer.parseInt(guess);
 
         guessMap.put(name, value);
-
     }
 
+    /**
+     * Set bet on List of bets
+     *
+     * @param playerBet
+     */
     public void setBet(String playerBet) {
 
-       betArray.add(playerBet);
+        betArray.add(playerBet);
 
     }
 
-    /*public void addBet(String bets){
-        for (String s: bet) {
-            s = bets;
-        }
-    }*/
+    public int getTotalPlayers() {
+        return totalPlayers;
+    }
+
+    public int getTotalCoins() {
+        return totalCoins;
+    }
+
+
 
 }
 

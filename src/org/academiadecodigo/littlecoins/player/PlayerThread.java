@@ -21,6 +21,9 @@ public class PlayerThread implements Runnable {
 
     }
 
+    /**
+     * Creates the input from the server stream
+     */
     @Override
     public void run() {
 
@@ -38,17 +41,13 @@ public class PlayerThread implements Runnable {
                     }
                 }else{
                     System.out.println(line);
-                }  ;
-
-                /*if(line.equals("Your name was accepted!")){
-                    hasName = !hasName;
                 }
-                System.out.println(line);
-            */
+
             }
             System.out.println("exited");
 
-            /*
+
+
             //Quando ler "TOKEN" chama metodo de PLAYER.notify);
             while ((line = in.readLine()) != null) {
                 if(line.equals("Bet accept!")){
@@ -62,13 +61,7 @@ public class PlayerThread implements Runnable {
                     hasGuess = !hasGuess;
                 }
                 System.out.println(line);
-            }*/
-
-
-
-
-
-
+            }
 
             in.close();
             playerSocket.close();
@@ -89,4 +82,13 @@ public class PlayerThread implements Runnable {
     public boolean hasBet() {
         return hasBet;
     }
+
+    public void setHasBet(boolean hasBet) {
+        this.hasBet = hasBet;
+    }
+
+    public void setHasGuess(boolean hasGuess) {
+        this.hasGuess = hasGuess;
+    }
+
 }
