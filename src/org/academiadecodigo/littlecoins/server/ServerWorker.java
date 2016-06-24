@@ -1,5 +1,7 @@
 package org.academiadecodigo.littlecoins.server;
 
+import org.academiadecodigo.littlecoins.FileManager;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -46,7 +48,9 @@ public class ServerWorker implements Runnable {
             in = new BufferedReader(new InputStreamReader(playerSocket.getInputStream()));
 
 
-            out.println("Hi ... Welcome to little coins Game...");
+            String read = FileManager.readFile();
+
+            out.println(read);
 
 
             out.println("Please enter your name.");
