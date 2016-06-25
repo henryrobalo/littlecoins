@@ -24,6 +24,9 @@ public class Game {
 
     }
 
+    public int getTotalbets(){
+        return betArray.size();
+    }
 
     public void start() {
 
@@ -39,7 +42,7 @@ public class Game {
      * @return
      */
     public boolean hasBet() {
-        return betArray.size() < totalPlayers;
+        return betArray.size() == totalPlayers;
     }
 
     /**
@@ -56,7 +59,7 @@ public class Game {
     }
 
     public boolean hasGuess() {
-        return guessMap.size() < totalPlayers;
+        return guessMap.size() == totalPlayers;
     }
 
     /**
@@ -157,8 +160,6 @@ public class Game {
     public int getTotalCoins() {
         return totalCoins;
     }
-
-
 
 }
 

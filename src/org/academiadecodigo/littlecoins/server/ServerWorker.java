@@ -1,13 +1,11 @@
 package org.academiadecodigo.littlecoins.server;
 
 import org.academiadecodigo.littlecoins.FileManager;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-
 
 /**
  * Created by codecadet on 17/06/16.
@@ -26,13 +24,11 @@ public class ServerWorker implements Runnable {
     private String hand;
     private int guess;
 
-
     public ServerWorker(Socket playerSocket, Server server) {
 
         this.playerSocket = playerSocket;
         this.server = server;
     }
-
 
     /**
      * Creates streams output & input
@@ -77,6 +73,8 @@ public class ServerWorker implements Runnable {
 
             out.println("You have 3 Coins , choose how many coins you want to hand..(0-3)");
 
+            acceptBet();
+
             String line = "";
 
             //Receives and verifies
@@ -105,7 +103,7 @@ public class ServerWorker implements Runnable {
 
                     while (!server.isCorrectBet(line)) {
 
-                        System.out.println("im beting");
+                        send("im beting");
 
                         try {
                             in.readLine();
@@ -177,18 +175,13 @@ public class ServerWorker implements Runnable {
 
                     if (server.containsName(tName) || tName.equals("")) {
                         out.println("This name is already in the list. Please change name");
-
-
                     } else {
-                        System.out.println("entra aqui");
                         server.setName(this, tName);
                         //setName(tName);
                         //out.println("Name changed to " + tName);
                         correctName = true;
                         out.println("Your name was accepted!");
                     }
-
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -214,6 +207,7 @@ public class ServerWorker implements Runnable {
                     out.println("Bet accept!");//nao alterar este print é a condiçao de saida do while na playerThread
                     System.out.println("Player " + name + " hand is: " + hand);
                     correctBet = true;
+                    server.addBet(hand);
 
                 } else {
                     out.println("Make sure you hand between 0 or 3 coins!");

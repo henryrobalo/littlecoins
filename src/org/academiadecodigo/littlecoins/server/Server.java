@@ -91,7 +91,7 @@ public class Server {
             while (!gameEnds) {
                 //Send token to unlock the client
                 for (ServerWorker sw : serverWorkerList) {
-                    sw.send("TOKEN");
+                    sw.send("NAME");
                 }
 
                 //Waiting for bets
@@ -273,5 +273,9 @@ public class Server {
 
     public Game getGame() {
         return game;
+    }
+
+    public void addBet(String hand) {
+        game.setBet(hand);
     }
 }

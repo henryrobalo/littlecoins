@@ -35,23 +35,21 @@ public class PlayerThread implements Runnable {
 
             while ((line = in.readLine()) != null) {
 
-                if(line.contains("TOKEN")){
+                if(line.contains("NAME")){
                     synchronized (parent){
                         parent.notifyAll();
                     }
                 }else{
                     System.out.println(line);
                 }
-
             }
             System.out.println("exited");
-
-
 
             //Quando ler "TOKEN" chama metodo de PLAYER.notify);
             while ((line = in.readLine()) != null) {
                 if(line.equals("Bet accept!")){
                     hasBet = !hasBet;
+                    parent.notifyAll();
                 }
                 System.out.println(line);
             }
